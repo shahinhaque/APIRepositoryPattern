@@ -5,10 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using RepositoryModel;
+using RepositoryModel.Helper;
 
 namespace RepositoryPattern
 {
@@ -25,6 +28,10 @@ namespace RepositoryPattern
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddDbContextPool<ApplicationContext>(options =>
+                 options.UseSqlServer(Configuration.GetConnectionString("connectionString")));
+
+            services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
